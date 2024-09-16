@@ -13,7 +13,6 @@ from taxi.models import Driver, Car, Manufacturer
 @login_required
 def index(request):
     """View function for the home page of the site."""
-
     num_drivers = Driver.objects.count()
     num_cars = Car.objects.count()
     num_manufacturers = Manufacturer.objects.count()
@@ -27,7 +26,6 @@ def index(request):
         "num_manufacturers": num_manufacturers,
         "num_visits": num_visits + 1,
     }
-
     return render(request, "taxi/index.html", context=context)
 
 
@@ -102,11 +100,6 @@ class DriverCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = DriverCreationForm
 
 
-# class DriverUpdateView(LoginRequiredMixin, generic.UpdateView):
-#     model = get_user_model()
-#     form_class = DriverCreationForm
-
-
 class DriverLicenseUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = get_user_model()
     form_class = DriverLicenseUpdateForm
@@ -122,10 +115,8 @@ class DriverDeleteView(LoginRequiredMixin, generic.DeleteView):
 def assign_delete_driver(request: HttpRequest, pk: int) -> HttpResponse:
     car = get_object_or_404(Car, id=pk)
     driver = request.user
-
     if driver in car.drivers.all():
         car.drivers.remove(driver)
     else:
         car.drivers.add(driver)
-
     return redirect("taxi:car-detail", pk=pk)
